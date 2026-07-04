@@ -9,7 +9,7 @@ COPY requirements.txt requirments.txt
 
 # Install the dependencies specified in the requirements file
 # --no-cache-dir - Prevents pip from caching the packages, reducing the size of the image
-RUN pip install --no-cache-dir ir requirments.txt
+RUN pip install --no-cache-dir -r requirments.txt
 
 # Copy the rest of the application code into the container
 COPY . .
