@@ -33,10 +33,10 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 dir('terraform') {
-                    sh '''
-                        terraform init
-                        terraform apply -auto-approve
-                    '''
+                sh '''
+                    terraform init
+                    terraform apply -auto-approve -var="key_name=flask-key"
+                '''
                 }
             }
         }
