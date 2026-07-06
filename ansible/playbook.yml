@@ -1,0 +1,46 @@
+# Configuration steps to set up the server and deploy the Flask application
+
+- name: Configure EC@ instance and deploy Flask application
+  hosts: web
+  become: yes
+
+  tasks:
+    - name: Install Docker
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    - name: Pull Flask application Docker image
+      docker_image:
+        name: kalanajy/hello-flask
+        source: pull
+
+    - name: Run Flask application container
+      docker_container:
+        name: hello-flask
+        image: kalanajy/hello-flask
+        state: started
+        ports:
+          - "5000:5000"
+
+    - name: Install Python pip
+      dnf:
+        name: python3-pip
+        state: present
+
+    - name: Install Docker SDK for Python
+      pip:
+        name: docker
+        extra_args: --ignore-installed
