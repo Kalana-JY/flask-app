@@ -8,8 +8,6 @@ The workflow begins with a basic Flask application. It is containerized via Dock
 
 ## CI/CD Pipeline Architecture Diagram
 
-![CI/CD Pipeline Architecture](Architecture Diagram.png)
-
 ```mermaid
 graph TD
     A[Developer Git Push] -->|Triggers Pipeline| B[Jenkins CI/CD Server]
