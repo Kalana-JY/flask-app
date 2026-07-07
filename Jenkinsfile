@@ -37,6 +37,12 @@ pipeline {
                     terraform init
                     terraform apply -auto-approve -var="key_name=flask-key"
                 '''
+                    script {
+                        env.INSTANCE_IP = sh(
+                            script: "terraform output -raw instance_public_ip",
+                            returnStdout: true
+                        ).trim()
+                    }
                 }
             }
         }
@@ -45,7 +51,11 @@ pipeline {
             steps {
                 dir('ansible') {
                     sshagent(credentials: ['flask-ssh-key']) {
-                        sh 'ansible-playbook -i inventory.ini playbook.yml'
+                        sh '''
+                            echo "[web]" > inventory.ini
+                            echo "$INSTANCE_IP ansible_user=ec2-user ansible_ssh_private_key_file=$HOME/.ssh/flask-key.pem" >> inventory.ini
+                            ansible-playbook -i inventory.ini playbook.yml
+                        '''
                     }
                 }
             }
